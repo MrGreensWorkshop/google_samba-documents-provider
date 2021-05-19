@@ -91,6 +91,17 @@
           android:hint="@string/password"/>
 
       </LinearLayout>
+
+      <TextView
+          android:id="@+id/mount_list_label"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="@string/mount_list_label" />
+
+      <com.google.android.sambadocumentsprovider.MyListView
+          android:id="@+id/mount_list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
     </LinearLayout>
   </ScrollView>
 

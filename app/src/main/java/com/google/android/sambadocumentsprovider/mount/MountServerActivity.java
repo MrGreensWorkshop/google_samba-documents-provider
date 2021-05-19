@@ -19,8 +19,10 @@ package com.google.android.sambadocumentsprovider.mount;
 
 import static com.google.android.sambadocumentsprovider.base.DocumentIdHelper.toRootId;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -41,9 +43,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.sambadocumentsprovider.R;
@@ -56,6 +61,10 @@ import com.google.android.sambadocumentsprovider.cache.DocumentCache;
 import com.google.android.sambadocumentsprovider.document.DocumentMetadata;
 import com.google.android.sambadocumentsprovider.nativefacade.SmbClient;
 import com.google.android.sambadocumentsprovider.provider.SambaDocumentsProvider;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 public class MountServerActivity extends AppCompatActivity {
@@ -110,7 +119,10 @@ public class MountServerActivity extends AppCompatActivity {
   private EditText mUsernameEditText;
   private EditText mPasswordEditText;
 
+  private ListView mMountList;
+
   private ConnectivityManager mConnectivityManager;
+  private ArrayAdapter<String> ListViewAdapter;
 
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +147,16 @@ public class MountServerActivity extends AppCompatActivity {
     mPasswordEditText = (EditText) findViewById(R.id.password);
     mPasswordEditText.setOnKeyListener(mMountKeyListener);
 
+    mMountList = (ListView) findViewById(R.id.mount_list);
+
+    mountListviewFill();
+    mMountList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        mountListviewItemClick(position);
+      }
+    });
+
     final Button mount = (Button) findViewById(R.id.mount);
     mount.setOnClickListener(mMountListener);
 
@@ -153,6 +175,50 @@ public class MountServerActivity extends AppCompatActivity {
     mConnectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
 
     restoreSavedInstanceState(savedInstanceState);
+  }
+
+  private void mountListviewFill() {
+    final List<String> mountListArrayList = new ArrayList<String>();
+    ListViewAdapter = new ArrayAdapter<String>(this,
+            android.R.layout.simple_list_item_1, mountListArrayList);
+    mMountList.setAdapter(ListViewAdapter);
+    Iterator<String> itr = mShareManager.iterator();
+    while (itr.hasNext())
+    {
+      String data = itr.next();
+      mountListArrayList.add(data);
+      ListViewAdapter.notifyDataSetChanged();
+    }
+  }
+
+  private void mountListviewItemClick(int position) {
+    String value = ListViewAdapter.getItem(position);
+    AlertDialog.Builder builder = new AlertDialog.Builder(MountServerActivity.this);
+    builder.setMessage(getString(R.string.do_you_want_to_unmount) + value);
+    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+    {
+      @Override public void onClick(DialogInterface dialogInterface, int i) {
+        if (mShareManager.containsShare(value)){
+          final boolean ret = mShareManager.unmountServer(value);
+          if (ret){
+            showMessage(R.string.succeed_unmounting);
+            //ListViewAdapter.remove(value);
+            mountListviewFill();
+          }else {
+            showMessage(R.string.failed_unmounting);
+          }
+        }else{
+          showMessage(R.string.not_mounted);
+          //ListViewAdapter.remove(value);
+          mountListviewFill();
+        }
+      }
+    });
+    builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+    {
+      @Override public void onClick(DialogInterface dialogInterface, int i) {}
+    });
+    builder.show();
   }
 
   private void restoreSavedInstanceState(@Nullable Bundle savedInstanceState) {
@@ -252,6 +318,7 @@ public class MountServerActivity extends AppCompatActivity {
           case SUCCEEDED:
             clearInputs();
             launchFileManager(metadata);
+            ListViewAdapter.add(metadata.getUri().toString());
             showMessage(R.string.share_mounted);
             break;
           case FAILED:
@@ -303,6 +370,7 @@ public class MountServerActivity extends AppCompatActivity {
 
   private void clearInputs() {
     mSharePathEditText.setText("");
+    setNeedsPasswordState(false);
     clearCredentials();
   }
 

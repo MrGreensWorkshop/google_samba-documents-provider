@@ -24,16 +24,22 @@
   <string name="password">Password</string>
 
   <string name="needs_password">My file share needs a password</string>
-
+  <string name="mount_list_label">Mount List</string>
   <string name="mount">Mount</string>
   <string name="cancel">Cancel</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
 
   <string name="no_active_network">No active network detected. Please check your network.</string>
   <string name="share_path_malformed">Share path is incorrectly formatted.</string>
   <string name="share_already_mounted">This share is already mounted.</string>
   <string name="share_mounted">File share has been mounted.</string>
   <string name="failed_mounting">Failed to mount share. Please try again.</string>
+  <string name="failed_unmounting">Failed to unmount share. Please try again.</string>
+  <string name="not_mounted">Selected share is not mounted.</string>
+  <string name="succeed_unmounting">Selected share unmounted.</string>
   <string name="credential_error">Access to read was denied. Please check your credential and permission.</string>
+  <string name="do_you_want_to_unmount">"Do you want to unmount share?\n"</string>
 
   <string name="mounting_share">Mounting file share&#8230;</string>
 

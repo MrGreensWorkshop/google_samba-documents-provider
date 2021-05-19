@@ -127,6 +127,8 @@ public class ShareManager implements Iterable<String> {
     }
 
     mServerStringMap.remove(uri);
+    mPref.edit().remove(SERVER_STRING_SET_KEY).apply();//this deletes all items in SERVER_STRING_SET_KEY
+    mPref.edit().putStringSet(SERVER_STRING_SET_KEY, mServerStringSet).apply();
 
     mCredentialCache.removeCredential(uri);
 
