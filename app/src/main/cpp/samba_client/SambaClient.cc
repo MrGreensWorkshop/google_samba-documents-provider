@@ -19,8 +19,9 @@
 #include "SambaClient.h"
 #include "credential_cache/CredentialCache.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <string>
+#include <errno.h>
 
 #define TAG "NativeSambaClient"
 

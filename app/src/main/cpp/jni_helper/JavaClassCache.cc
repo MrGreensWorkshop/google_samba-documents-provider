@@ -16,6 +16,7 @@
  */
 
 #include "JavaClassCache.h"
+#include <string>
 
 namespace SambaClient {
 jclass JavaClassCache::get(JNIEnv *env, const char *name_) {

@@ -17,7 +17,7 @@
 
 #ifndef SAMBADOCUMENTSPROVIDER_JAVACLASSCACHE_H
 #define SAMBADOCUMENTSPROVIDER_JAVACLASSCACHE_H
-
+#include <string>
 #include <unordered_map>
 #include <jni.h>
 

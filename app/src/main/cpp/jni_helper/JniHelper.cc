@@ -16,6 +16,7 @@
  */
 
 #include <vector>
+#include <string>
 
 #include "JniHelper.h"
 
@@ -25,7 +26,8 @@
 #include "samba_client/SambaClient.h"
 #include "credential_cache/CredentialCache.h"
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <errno.h>
 
 #define CLASS_PREFIX "com/google/android/sambadocumentsprovider"
 
