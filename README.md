@@ -1,3 +1,6 @@
+# feature
+- Mounted smb list which allows you to unmount the smb by taping. 
+
 # Samba Documents Provider
 ## Overview
 This is an Android app that extends the built in File Manager to support connecting to SMB
